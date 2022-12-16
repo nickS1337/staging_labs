@@ -1,0 +1,1 @@
+sudo aa-remove-unknown
