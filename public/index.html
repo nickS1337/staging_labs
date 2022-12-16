@@ -2,32 +2,70 @@
 <html lang="en">
 
 <head>
+    
+    <script src="jquery.min.js"></script>
+    <script src="jquery-ui.js"></script>
+    <script src="jquery-ui.min.js"></script>
 
     <link rel="stylesheet" href="stylesheet.css"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https//fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto+Mono:wght@200;300&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
 
-    <!-- Datatables CDN -->
-    <link rel="stylesheet" href="cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" />
-    <script src="cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-
+    <script src="http://127.0.0.1:27015/socket.io/socket.io.js"></script>
+    
 </head>
 
 <body>
 
-    <div id="nav">
-        <div id="logo"></div>
-        <div id="signout">
-            <div id="signout-icon"></div>
-            <div id="signout-txt">Signout</div>
+    <div id="navbar">
+ 
+        <div id="navbar-left">
+            <div id="db-icon" class="inline-middle cover"></div>
+            <div id="app-name" class="inline-middle">
+                <div id="app-title">MyGene CRUD</div>
+                <div id="app-author">by Nicholas Smith</div>
+            </div>
         </div>
+        <div id="navbar-right">
+
+            <div id="row_selected" class="inline-middle">NO RECORD(S) SELECTED</div>
+
+            <div id="list-actions" class="inline-middle">
+                <div class="action inline-middle">CREATE</div>
+                <div class="action inline-middle">UPDATE</div>
+                <div class="action inline-middle">DELETE</div>
+            </div>
+
+            <div id="signout" class="inline-middle">
+                <div id="signout-text" class="inline-middle">SIGNOUT</div>
+                <div id="signout-icon" class="inline-middle cover"></div>
+            </div>
+
+        </div>
+
     </div>
 
     <div id="crud-container">
-        <div id="crud-title">CRUD Application</div>
+
+        <div id="crud-title">STAGING LABS</div>
+        <div id="no-records">86 records available</div>
+        <div class="information" id="welcome-tab">
+            <div class="information-icon cover"></div>
+            <div class="information-title">Information</div>
+            <div class="information-txt">Welcome to Staging Labs. Here you can Create, Read, Update, and Delete records from the database.<br>
+               <br>Please note you can only perform an UPDATE operation on record at a time. Though you can delete multiple records at once 
+            </div>
+        </div>
+
+        <table id="table">
+            
+        </table>
+        
     </div>
 
 </body>
+
+<script src="scripts.js"></script>
 
 </html>
