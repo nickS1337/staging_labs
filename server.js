@@ -6,7 +6,21 @@
 //
 //=========================================================//
 
-var mysql     = require("mysql2");
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+var mysql = require("mysql2");
+
+//Firebase setup
+//var Firebase = require("firebase");
+const serviceAccount = require("./firebase_service_account.json");
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+
+//Startup firebase
+let firebaseApp = initializeApp(serviceAccount);
+let auth        = getAuth(firebaseApp);
+
 //use express as the webserver
 var app  = require("express")();
 var http = require("http").Server(app);
@@ -163,7 +177,7 @@ io.on("connection", (socket)=>{
             }
 
             socket.emit("message", "UPDATE Operation successfully performed. Successfully updated 1 record. MYSQL: " + results.info);
-            socket.emit("reload");
+            //socket.emit("reload");
 
         });
         
@@ -212,5 +226,35 @@ io.on("connection", (socket)=>{
         });
         
     });
+
+
+    //Create a new user account when needed:
+    //SEE https://firebase.google.com/docs/auth/web/password-auth FOR REFERENCE
+    socket.on("create-account", (email, password)=>{
+
+        console.log("Received request to create new account: " + email);
+
+        createUserWithEmailAndPassword(auth, email, password).then((userCredentials)=>{
+            socket.emit("logged-in");
+        }).catch((e)=>{
+            socket.emit("login-error", "Failed to create new account: " + err.message);
+            console.log("Failed to create new account: " + err.message);
+        });
+
+    });
+
+    //Login a user when needed:
+    //SEE https://firebase.google.com/docs/auth/web/password-auth FOR REFERENCE
+    socket.on("login-user", (email, password)=>{
+
+        signInWithEmailAndPassword(auth, email, password).then(()=>{
+            socket.emit("logged-in");
+        }).catch((e)=>{
+            socket.emit("login-error", "Login failed: " + err.message);
+            console.log("Login failed: " + err.message);
+        });
+
+    });
+
 
 });

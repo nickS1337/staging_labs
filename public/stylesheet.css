@@ -13,6 +13,39 @@ html, body {
     background-color: rgb(100, 79, 184) !important;
 } */
 
+#login {
+    position: fixed;
+    display: table;
+    top: 0%;
+    left: 0%;
+    height: 100%;
+    width: 100%;
+    z-index: 999;
+    background-color: #170f33;
+}
+
+#login-inner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#login-title {
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+#login-subtitle {
+    position: relative;
+    font-family: "Roboto";
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
 #todo-list {
     position: absolute;
     top: 250px;
@@ -43,6 +76,11 @@ html, body {
 .inline-top {
     display: inline-block;
     vertical-align: top;
+}
+
+.middle {
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 #popups {
@@ -412,4 +450,50 @@ html, body {
     position: relative;
     font-family: "Roboto";
     font-size: 18px;
+}
+
+.login-input {
+    background-color: rgb(55 39 115) !important;
+    display: block;
+    margin-bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px;
+    box-sizing: border-box;
+    font-family: "Lato";
+    letter-spacing: 2.5px;
+    width: 350px;
+}
+
+.login-input::placeholder {
+    color: #ccc;
+}
+
+#login-button {
+    position: relative;
+    width: 350px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 20px;
+    font-size: 18px;
+    font-family: "Roboto";
+    letter-spacing: 5px;
+    background-color: rgb(96 57 245);
+}
+
+#confirm-password {
+    display: none;
+}
+
+#no-account {
+    position: relative;
+    margin-top: 25px;
+    color: #ccc;
+    cursor: pointer;
 }

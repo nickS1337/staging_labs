@@ -15,6 +15,9 @@ var update_inputs = [];
 //List of inputs (in order) in the table #table_create
 var create_inputs = [];
 
+//Are we in login or registration mode?
+var login_mode = true;
+
 //Stuff to run when the document is ready:
 $(document).ready(()=>{
 
@@ -26,7 +29,7 @@ $(document).ready(()=>{
     document.getElementById("create").onclick = ()=> { $("#create-container").hide().css({ "display": "table" }); }
 
     //Open #update-container when #update is clicked
-    document.getElementById("update").onclick = ()=>{  
+    document.getElementById("update").onclick = ()=>{
         
         //Because we can only update one row at a time
         if (Object.keys(selected_rows_ids).length == 1){
@@ -151,7 +154,8 @@ $(document).ready(()=>{
         sendMessage("Sent UPDATE request for 1 record. Please wait a moment");
         socket.emit("update-request", original_row, updated_row);
 
-        console.log(original_row, updated_row);
+        //Update the row's HTML
+        modifyRow(Object.keys(selected_rows_ids)[0], updated_row);
         
     }
 
@@ -177,6 +181,50 @@ $(document).ready(()=>{
         $("#create-container").css({ "display": "none" });
 
     }
+
+
+    //Show the registration page when the user clicks on #no-account:
+    document.getElementById("no-account").onclick = ()=>{
+
+
+        $("#login-title").html("Create your account")
+        $("#confirm-password").css({ "display": "block" });
+        $("#login-button").html("Register");
+
+        //We are now in registration mode
+        login_mode = false;
+
+    };
+
+    //Either login or register the user when #login-button is clicked
+    document.getElementById("login-button").onclick = ()=>{
+
+        var email = $("#email").val();
+        var opass = $("#password").val();
+        var cpass = $("#confirm-password").val();
+
+        if (login_mode){
+
+            //Otherwise we are in login mode.
+            socket.emit("login-user", email, opass);
+
+        } else {
+
+            //We are in registration mode. Verify that the user's passwords are the same
+            //then send the data off to the server.
+
+            if (cpass !== opass){
+                $("#no-account").html("Your passwords do not match");
+                $("#no-account").css({ "color": "red" });
+            }
+
+            socket.emit("create-account", email, opass);
+
+        }
+
+    }
+
+    document.getElementById("signout").onclick = ()=>{ window.location.reload() };
 
 });
 
@@ -327,6 +375,14 @@ function addCheckboxEvent(row_id, data){
 
 socket.on("reload", ()=>{ window.location.reload() });
 socket.on("message", (msg, colour="green")=>{ sendMessage(msg, colour); });
+socket.on("login-error", (msg)=>{
+    $("#no-account").html(msg);
+    $("#no-account").css({ "color": "red" });
+});
+
+socket.on("logged-in", ()=>{
+    $("#login").fadeOut();
+})
 
 function sendMessage(msg, colour="green"){
 
@@ -383,5 +439,27 @@ function leadingZero(x){
     } else {
         return x;
     }
+
+}
+
+function modifyRow(type, row_id, row_data){
+
+    //modifyRow()
+    //Modify a row in the table.
+    //row_id => id of the element to be modified
+    //row_data => JSON, data to be displayed in the table row
+
+    var new_tr = "<td><input class='checkbox' type='checkbox' id='checkbox-"+row_id+"' /> </td>"
+    var row_keys = Object.keys(row_data);
+
+    console.log(row_data);
+
+    for (var i = 0; i < row_keys.length; i++){
+        new_tr += "<td>" + row_data[row_keys[i]] + "</td>"
+    }
+    
+    console.log(new_tr);
+
+    $("#" + row_id).html(new_tr);
 
 }

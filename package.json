@@ -1,7 +1,8 @@
 {
-  "name": "intro_final",
+  "name": "mygene-crud",
   "version": "1.0.0",
-  "description": "",
+  "type": "module",
+  "description": "crud application for staging_labs",
   "main": "server.js",
   "scripts": {
     "test": "node server.js",
@@ -11,9 +12,20 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
+    "firebase": "^9.15.0",
+    "firebase-admin": "^11.4.0",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.20",
     "websocket": "^1.0.34",
     "ws": "^8.11.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickS1337/staging_labs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nickS1337/staging_labs/issues"
+  },
+  "homepage": "https://github.com/nickS1337/staging_labs#readme"
 }
