@@ -1,13 +1,19 @@
 var socket = io.connect("http://127.0.0.1:27015/", { transports : ['websocket'] });
 
+//List of keys associated with every datapoint (this is also the headers of the table)
+var global_data_keys = [];
+
 //List of selected rows -- WITH THE JSON DATA OF THE ROW
 var selected_rows = [];
 
 //JSON Object of the selected rows. The HTML ID of the row identifies the data
 var selected_rows_ids = {};
 
-//List of inputs currently present in #table-update
+//List of inputs (in order) currently present in #table-update
 var update_inputs = [];
+
+//List of inputs (in order) in the table #table_create
+var create_inputs = [];
 
 //Stuff to run when the document is ready:
 $(document).ready(()=>{
@@ -44,7 +50,7 @@ $(document).ready(()=>{
             //No we need to populate #table-update with the data the user selected.
             for (var i = 0; i < data_keys.length; i++){
 
-                tr_html = "<tr>"
+                tr_html = "<tr>";
 
                 //Populate the header row
                 for (var i = 0; i < data_keys.length; i++){
@@ -61,11 +67,11 @@ $(document).ready(()=>{
                     //The value of the input:
                     var input_val = (data[data_keys[i]] == null) ? "NULL" : data[data_keys[i]];
                 
-                    //While we're at it, also populate #table_create and #table_create
+                    //While we're at it, also populate #table_create
                     $("#table-update").append(`
                         <tr`+isOdd+`>
                             <td>`+ data_keys[i] +`</td>
-                            <td><`+input_type+` class="action-table-input" placeholder="Enter `+typeof data[data_keys[i]]+`" value="`+input_val+`" id="`+input_id+`">`+ ((input_type == "textarea") ? input_val + "</textarea>" : "") +`
+                            <td><`+input_type+` class="action-table-input" id="`+input_id+`" placeholder="Enter `+typeof data[data_keys[i]]+`" value="`+input_val+`" id="`+input_id+`">`+ ((input_type == "textarea") ? input_val + "</textarea>" : "") +`
                             </td>
                             <td>`+ typeof data[data_keys[i]] +`</td>
                         </tr>
@@ -115,6 +121,8 @@ $(document).ready(()=>{
         sendMessage("Sent deletion request for " + deleting.length + " records. Please wait.")
         socket.emit("delete-request", deleting);
 
+        $("#delete-container").css({ "display": "none" })
+
     };
 
     //Send an UPDATE request when #confirm-update is clicked
@@ -140,11 +148,34 @@ $(document).ready(()=>{
         //Next, remove the container and notify the user of the ongoing process
         $("#update-container").css({ "display": "none" });
 
-        sendMessage("Sent update request for 1 record. Please wait a moment");
+        sendMessage("Sent UPDATE request for 1 record. Please wait a moment");
         socket.emit("update-request", original_row, updated_row);
 
         console.log(original_row, updated_row);
         
+    }
+
+    //Send a CREATE request when the user clicks on #confirm-create
+    document.getElementById("confirm-create").onclick = ()=>{
+
+        //There are no limitations to how many elements we need to have selected
+        //before we can create the item.
+        
+        //Next, we will iterate over global_data_keys[] and will construct a new object
+        //to send to the server.
+        var new_object = {};
+
+        for (var i = 0; i < global_data_keys.length; i++){
+            new_object[global_data_keys[i]] = document.getElementById(create_inputs[i]).value;
+        }
+
+        //Now ask the server to create the row:
+        socket.emit("create-row", new_object);
+        
+        sendMessage("Sent CREATE request for 1 record. Please wait a moment");
+        
+        $("#create-container").css({ "display": "none" });
+
     }
 
 });
@@ -152,9 +183,14 @@ $(document).ready(()=>{
 //We will receive 'table-data' as soon as we connect to the server:
 socket.on("table-data", (data)=>{
 
+    data = data.reverse();
+
     //Grab a sample so we can know what the table headers will be:
     var data_keys = Object.keys(data[0]);
     var th_html = "<tr class='th-row'><th></th>";
+
+    //Remember globally what keys we're working with. This won't change until the page refreshes
+    global_data_keys = data_keys;
 
     //Populate the header row
     for (var i = 0; i < data_keys.length; i++){
@@ -162,11 +198,15 @@ socket.on("table-data", (data)=>{
         th_html += "<th>" + data_keys[i] + "</th>";
         var isOdd   = (i % 2 == 0) ? "" : " class='odd'";
 
+        //Give the input for #table_create an id and keep track of it in create_inputs[]
+        var input_id = randomStr(12);
+        create_inputs.push(input_id);
+
         //While we're at it, also populate #table_create and #table_create
         $("#table_create").append(`
             <tr`+isOdd+`>
                 <td>`+ data_keys[i] +`</td>
-                <td><input type="text" class="action-table-input" placeholder="Enter `+typeof data[0][data_keys[i]]+`" /></td>
+                <td><input id="`+input_id+`" type="text" class="action-table-input" placeholder="Enter `+typeof data[0][data_keys[i]]+`" /></td>
                 <td>`+ typeof data[0][data_keys[i]] +`</td>
             </tr>
         `);
@@ -293,8 +333,6 @@ function sendMessage(msg, colour="green"){
     //sendMessage()
     //Send a nice little message to the user. This is usually done when the server has something
     //it wants to say to the user.
-
-    console.log(colour);
     
     let time     = new Date();
     let time_txt = time.getHours() + ":" + leadingZero(time.getMinutes()) + ":" + leadingZero(time.getSeconds());

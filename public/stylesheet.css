@@ -13,6 +13,16 @@ html, body {
     background-color: rgb(100, 79, 184) !important;
 } */
 
+#todo-list {
+    position: absolute;
+    top: 250px;
+    left: 50px;
+    background-color: #0b061b;
+    border: 0.2em solid #090124;
+    border-style: dashed;
+    opacity: 0.5;
+}
+
 .cover {
     background-position: center;
     background-repeat: no-repeat;

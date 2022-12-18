@@ -106,6 +106,8 @@ io.on("connection", (socket)=>{
 
     });
 
+
+
     //When we receive an UPDATE request:
     socket.on("update-request", (original_row, updated_row)=>{
 
@@ -160,13 +162,55 @@ io.on("connection", (socket)=>{
                 return;
             }
 
-
             socket.emit("message", "UPDATE Operation successfully performed. Successfully updated 1 record. MYSQL: " + results.info);
-
-
-            socket.emit("reload")
+            socket.emit("reload");
 
         });
+        
+    });
+
+
+    //When we receive a CREATE request:
+    socket.on("create-row", (new_row)=>{
+
+        console.log("Received CREATE Request");
+
+        //Keys of the new row:
+        var keys = Object.keys(new_row);
+
+        //We will need to yet again construct another MySQL string.
+        var fields = "(";
+        var values = "";
+
+        for (var i = 0; i < keys.length; i++){
+        
+            comma = (i !== keys.length-1) ? ", " : "";
+
+            var value = new_row[keys[i]];
+                value = (typeof value == "string") ? "'" + value + "'" : value;
+
+            fields += keys[i] + comma;
+            values += value + comma;
+        
+        } fields += ")";
+
+        var mysql_string = "INSERT INTO staging_labs " + fields + " VALUES (" + values + ")";
+        
+        //Now that we've created it, perform the query:
+        line.query(mysql_string, (err, results, fields)=>{
+
+            if (err){
+                errString = "Error performing CREATE operation: " + err;
+                socket.emit("message", errString, "red");
+                console.log(errString);
+                return;
+            }
+
+            socket.emit("message", "CREATE Operation successfully performed. Successfully created 1 new record. MYSQL: " + results.info);
+            socket.emit("reload");
+
+        });
+        
     });
 
 });

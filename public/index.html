@@ -18,6 +18,8 @@
 
 <body>
 
+    <div id="login"></div>
+
     <div id="popups">
         <!-- <div class="popup">
             <div class="inline-middle">
@@ -27,6 +29,20 @@
             <div class="popup-contents"></div>
         </div> -->
         <!-- <div class="popup-icon cover inline-middle"></div> -->
+    </div>
+
+    <div class="information inline-middle" id="todo-list">
+        <div class="information-icon cover"></div>
+        <div class="information-title">Todo List</div>
+        <div class="information-txt">
+            - CREATE Backend functionality [IMPORTANT]<br>
+            - Additional protection against incoming data on backend<br>
+            - Sort rows<br>
+            - Persistent database changes<br>
+            - Nice pattern in background (if we got time)<br>
+            - Custom scrollbar<br>
+            - Firebase authentication [IMPORTANT]
+        </div>
     </div>
 
     <div id="navbar">
@@ -102,7 +118,7 @@
             <br>
 
             <div>
-                <div class="button inline-middle" style="background-color: rgb(26 181 18);">
+                <div class="button inline-middle" style="background-color: rgb(26 181 18);" id="confirm-create">
                     <div class="button-icon inline-middle cover" style="background-image: url('pics/save.png')"></div>
                     <div class="button-text inline-middle">Create new record</div>
                 </div>
