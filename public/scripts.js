@@ -4,9 +4,10 @@ var socket = io.connect("http://127.0.0.1:27015/", { transports : ['websocket'] 
 var selected_rows = [];
 
 //JSON Object of the selected rows. The HTML ID of the row identifies the data
-var selected_rows_ids = {
-    "rows": 0
-};
+var selected_rows_ids = {};
+
+//List of inputs currently present in #table-update
+var update_inputs = [];
 
 //Stuff to run when the document is ready:
 $(document).ready(()=>{
@@ -19,7 +20,66 @@ $(document).ready(()=>{
     document.getElementById("create").onclick = ()=> { $("#create-container").hide().css({ "display": "table" }); }
 
     //Open #update-container when #update is clicked
-    document.getElementById("update").onclick = ()=>{  $("#update-container").css({ "display": "table" }) }
+    document.getElementById("update").onclick = ()=>{  
+        
+        //Because we can only update one row at a time
+        if (Object.keys(selected_rows_ids).length == 1){
+            
+            $("#update-container").css({ "display": "table" });
+
+            var data      = selected_rows_ids[Object.keys(selected_rows_ids)[0]];
+            var data_keys = Object.keys(data);
+
+            //Reset the table:
+            $("#table-update").html(`
+            <tr class="action-table-th">
+                <th>COLUMN</th>
+                <th>ROW</th>
+                <th>Type</th>    
+            </tr>`);
+
+            //Also reset the list of inputs we have connected to #table-update
+            update_inputs = [];
+            
+            //No we need to populate #table-update with the data the user selected.
+            for (var i = 0; i < data_keys.length; i++){
+
+                tr_html = "<tr>"
+
+                //Populate the header row
+                for (var i = 0; i < data_keys.length; i++){
+                    
+                    tr_html += "<td>" + data_keys[i] + "</td>";
+                    var isOdd   = (i % 2 == 0) ? "" : " class='odd'";
+
+                    //If we need to convert this to a textarea:
+                    var input_type = (data[data_keys[i]] == null|| data[data_keys[i]].toString().length > 10) ? "textarea" : "input type='text'"
+                    
+                    //We also need to come up with an id for the input:
+                    var input_id = randomStr(12);
+
+                    //The value of the input:
+                    var input_val = (data[data_keys[i]] == null) ? "NULL" : data[data_keys[i]];
+                
+                    //While we're at it, also populate #table_create and #table_create
+                    $("#table-update").append(`
+                        <tr`+isOdd+`>
+                            <td>`+ data_keys[i] +`</td>
+                            <td><`+input_type+` class="action-table-input" placeholder="Enter `+typeof data[data_keys[i]]+`" value="`+input_val+`" id="`+input_id+`">`+ ((input_type == "textarea") ? input_val + "</textarea>" : "") +`
+                            </td>
+                            <td>`+ typeof data[data_keys[i]] +`</td>
+                        </tr>
+                    `);
+
+                    update_inputs.push(input_id);
+                
+                } tr_html += "</tr>";
+
+            }
+
+        }
+
+    }
 
     //Open #delete-container when #delete is clicked
     document.getElementById("delete").onclick = ()=>{ $("#delete-container").css({ "display": "table" }) }
@@ -33,7 +93,59 @@ $(document).ready(()=>{
     //Exit #delete-container when #delete is clicked
     document.getElementById("exit-delete").onclick = ()=>{ $("#delete-container").css({ "display": "none" }) }
 
-    //$("#update").click();
+    //Send a DELETE request when #confirm-delete is clicked
+    document.getElementById("confirm-delete").onclick = ()=>{ 
+
+        //We will send the contents of selected_row_ids, exluding the html row id:
+        var deleting = [];
+        var row_keys = Object.keys(selected_rows_ids);
+
+        for (var i = 0; i < row_keys.length; i++){
+            if (row_keys[i] !== "rows"){
+              
+                //Mark it for deletion for the server
+                deleting.push(selected_rows_ids[row_keys[i]])
+
+                //Also delete the rows from the HTML:
+                document.getElementById(row_keys[i]).remove();
+
+            }
+        }
+
+        sendMessage("Sent deletion request for " + deleting.length + " records. Please wait.")
+        socket.emit("delete-request", deleting);
+
+    };
+
+    //Send an UPDATE request when #confirm-update is clicked
+    document.getElementById("confirm-update").onclick = ()=>{
+
+        //The original row we have:
+        var original_row      = selected_rows_ids[Object.keys(selected_rows_ids)[0]]
+        var keys_original_row = Object.keys(original_row);
+
+        //The updated row we want:
+        var updated_row = {};
+
+        //We will iterate through original_row and insert the required keys
+        //and the use update_inputs[] as the values
+        for (var i = 0; i < keys_original_row.length; i++){
+
+            //New updated field value:
+            var newVal = (document.getElementById(update_inputs[i]).value == "NULL") ? null : document.getElementById(update_inputs[i]).value;
+            updated_row[keys_original_row[i]] = newVal;
+        
+        }
+
+        //Next, remove the container and notify the user of the ongoing process
+        $("#update-container").css({ "display": "none" });
+
+        sendMessage("Sent update request for 1 record. Please wait a moment");
+        socket.emit("update-request", original_row, updated_row);
+
+        console.log(original_row, updated_row);
+        
+    }
 
 });
 
@@ -149,30 +261,89 @@ function addCheckboxEvent(row_id, data){
 
         }
 
-        $("#row_selected").html("<a style='font-weight: bold'>"+(Object.keys(selected_rows_ids).length-1) + "</a> RECORD(S) SELECTED");
+        $("#row_selected").html("<a style='font-weight: bold'>"+(Object.keys(selected_rows_ids).length) + "</a> RECORD(S) SELECTED");
+        $("#no_selected").html(Object.keys(selected_rows_ids).length);
+
+        
+        //Also apply the different colour rules:
+
+        //For DELETE
+        if (Object.keys(selected_rows_ids).length > 0){
+            $("#delete").css({ "color": "#fff" })
+        } else {
+            $("#delete").css({ "color": "#bcbcbc" });
+        }
+
+        //For UPDATE
+        if (Object.keys(selected_rows_ids).length == 1){
+            $("#update").css({ "color": "#fff" });
+        } else {
+            $("#update").css({ "color": "#bcbcbc" });
+        }
 
     });
 
 }
+
+socket.on("reload", ()=>{ window.location.reload() });
+socket.on("message", (msg, colour="green")=>{ sendMessage(msg, colour); });
 
 function sendMessage(msg, colour="green"){
 
     //sendMessage()
     //Send a nice little message to the user. This is usually done when the server has something
     //it wants to say to the user.
-    
-    let time     = new Date().getTime();
-    let time_txt = time.getHours() + ":" + time.getMinutes();
 
-    $("popups").append(`
-    <div class="popup">
+    console.log(colour);
+    
+    let time     = new Date();
+    let time_txt = time.getHours() + ":" + leadingZero(time.getMinutes()) + ":" + leadingZero(time.getSeconds());
+    let popup_id = randomStr(12);
+
+    //Check if we should paint the message red:
+    var redClass = (colour == "red") ? " popup-red" : "";
+
+    let popup_html = `
+    <div class="popup`+redClass+`" id="`+popup_id+`">
         <div class="inline-middle">
             <div class="popup-time">`+time_txt+`</div>
             <div class="popup-title inline-middle">Response</div>                        
         </div>
         <!-- <div class="popup-icon cover inline-middle"></div> -->
         <div class="popup-contents">`+msg+`</div>
-    </div>
-    `);
+    </div>`;
+
+    $("#popups").append(popup_html).hide().fadeIn();
+
+    //Delay times (ms) to fade out and remove the pop up
+    let fadeTime   = 8000;
+    let removeTime = 12000;
+
+    if (colour == "red"){
+        fadeTime == 15000;
+        removeTime = 17000;
+    }
+
+    setTimeout(()=>{
+        $("#" + popup_id).fadeOut()
+    }, fadeTime);
+
+    setTimeout(()=>{
+        document.getElementById(popup_id).remove();
+    }, removeTime);
+
+
+}
+
+function leadingZero(x){
+
+    //Add a leading zero to a number, if its < 10.
+    //x => string
+
+    if (x < 10){
+        return "0" + x;
+    } else {
+        return x;
+    }
 
 }
