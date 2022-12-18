@@ -18,6 +18,17 @@
 
 <body>
 
+    <div id="popups">
+        <!-- <div class="popup">
+            <div class="inline-middle">
+                <div class="popup-time">9:05 PM</div>
+                <div class="popup-title inline-middle">Response</div>                        
+            </div>
+            <div class="popup-contents"></div>
+        </div> -->
+        <!-- <div class="popup-icon cover inline-middle"></div> -->
+    </div>
+
     <div id="navbar">
  
         <div id="navbar-left">
@@ -29,12 +40,16 @@
         </div>
         <div id="navbar-right">
 
-            <div id="row_selected" class="inline-middle">NO RECORD(S) SELECTED</div>
+            <div class="inline-middle" style="text-align: right;">
 
-            <div id="list-actions" class="inline-middle">
-                <div class="action inline-middle">CREATE</div>
-                <div class="action inline-middle">UPDATE</div>
-                <div class="action inline-middle">DELETE</div>
+                <div id="list-actions">
+                    <div class="action inline-middle" id="create">CREATE</div>
+                    <div class="action inline-middle" id="update">UPDATE</div>
+                    <div class="action inline-middle" id="delete">DELETE</div>
+                </div>
+
+                <div id="row_selected">NO RECORD(S) SELECTED</div>
+
             </div>
 
             <div id="signout" class="inline-middle">
@@ -58,10 +73,113 @@
             </div>
         </div>
 
-        <table id="table">
-            
-        </table>
+        <table id="table"></table>
         
+    </div>
+
+    <div class="action-fullscreen" id="create-container">
+
+        <div class="action-fullscreen-outer" ></div>
+        <div class="action-fullscreen-contents">
+
+            <div class="action-fullscreen-title">CREATE</div>
+
+            <div class="action-fullscreen-table-container">
+                <table class="action-fullscreen-table" id="table_create">
+                    <tr class="action-table-th">
+                        <th>COLUMN</th>
+                        <th>ROW</th>
+                        <th>Type</th>    
+                    </tr>
+                    <!-- <tr>
+                        <td>IDSTAGING_LABS</td>
+                        <td><input type="text" class="action-table-input" value="Test" /></td>
+                        <td>TEST</td>
+                    </tr> -->
+                </table>
+            </div>
+
+            <br>
+
+            <div>
+                <div class="button inline-middle" style="background-color: rgb(26 181 18);">
+                    <div class="button-icon inline-middle cover" style="background-image: url('pics/save.png')"></div>
+                    <div class="button-text inline-middle">Create new record</div>
+                </div>
+                <div class="button inline-middle" style="margin-right: 0px; background-color: rgb(165 2 2)" id="exit-create">
+                    <div class="button-icon inline-middle cover" style="background-image: url('pics/x.png')"></div>
+                    <div class="button-text inline-middle">Exit without changes</div>
+                </div>
+            </div>
+            <!-- <div class="action-fullscreen-description" style="color: #ccc; font-size: 16px; cursor: pointer;" id="exit-create">Exit without changes</div> -->
+
+        </div>
+
+    </div>
+
+    <div class="action-fullscreen" id="update-container">
+
+        <div class="action-fullscreen-outer" ></div>
+        <div class="action-fullscreen-contents">
+
+            <div class="action-fullscreen-title">UPDATE</div>
+
+            <div class="action-fullscreen-table-container">
+                <table class="action-fullscreen-table" id="table-update">
+                    <tr class="action-table-th">
+                        <th>COLUMN</th>
+                        <th>ROW</th>
+                        <th>Type</th>    
+                    </tr>
+                    <!-- <tr>
+                        <td>IDSTAGING_LABS</td>
+                        <td><input type="text" class="action-table-input" value="Test" /></td>
+                        <td>TEST</td>
+                    </tr> -->
+                </table>
+            </div>
+
+            <br>
+
+            <div>
+                <div class="button inline-middle" style="background-color: rgb(26 181 18);">
+                    <div class="button-icon inline-middle cover" style="background-image: url('pics/save.png')"></div>
+                    <div class="button-text inline-middle">Create new record</div>
+                </div>
+                <div class="button inline-middle" style="margin-right: 0px; background-color: rgb(165 2 2)" id="exit-update">
+                    <div class="button-icon inline-middle cover" style="background-image: url('pics/x.png')"></div>
+                    <div class="button-text inline-middle">Exit without changes</div>
+                </div>
+            </div>
+            <!-- <div class="action-fullscreen-description" style="color: #ccc; font-size: 16px; cursor: pointer;" id="exit-create">Exit without changes</div> -->
+
+        </div>
+
+    </div>
+
+    <div class="action-fullscreen" id="delete-container">
+
+        <div class="action-fullscreen-outer" ></div>
+        <div class="action-fullscreen-contents">
+
+            <div class="action-fullscreen-title">DELETE</div>
+
+            <div class="action-fullscreen-description">You have selected X record(s)</div>
+            <div class="action-fullscreen-description" style="font-weight: bold;">Are you sure you wish to permanently delete them?</div>
+
+            <div style="margin-top: 45px;">
+                <div class="button inline-middle" style="background-color: rgb(26 181 18);">
+                    <div class="button-icon inline-middle cover" style="background-image: url('pics/tick.png')"></div>
+                    <div class="button-text inline-middle">Confirm deletion</div>
+                </div>
+                <div class="button inline-middle" style="margin-right: 0px; background-color: rgb(165 2 2)" id="exit-delete">
+                    <div class="button-icon inline-middle cover" style="background-image: url('pics/x.png')"></div>
+                    <div class="button-text inline-middle">Exit without changes</div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
 </body>

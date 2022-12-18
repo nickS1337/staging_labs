@@ -1,11 +1,17 @@
 html, body {
     padding: 0px;
     margin: 0px;
+    width: 100%;
+    height: 100%;
     font-family: "Lato";
     color: #fff;
     background-color: #201547;
     letter-spacing: 1.5px;
 }
+
+/* .row-selected, .row-selected td{
+    background-color: rgb(100, 79, 184) !important;
+} */
 
 .cover {
     background-position: center;
@@ -24,16 +30,66 @@ html, body {
     vertical-align: middle;
 }
 
+.inline-middle {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#popups {
+    position: fixed;
+    top: 300px;
+    left: 150px;
+    z-index: 800;
+}
+
+.popup {
+    position: relative;
+    box-sizing: border-box;
+    height: fit-content;
+    width: fit-content;
+    max-width: 350px;
+    padding: 20px;
+    background-color: #14a101;
+    border: 0.2em solid #18c501;
+    border-style: dashed;
+    border-radius: 10px;
+}
+
+.popup-icon {
+    position: relative;
+    height: 22.5px;
+    width: 22.5px;
+    background-image: url("pics/terminal.png");
+    margin-right: 8px;
+}
+
+.popup-time {
+    margin-bottom: 0px;
+}
+
+.popup-contents {
+    margin-top: 5px;
+    font-family: "Roboto";
+}
+
+.popup-title {
+    font-size: 17px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+}
+
 #navbar {
     position: fixed;
     width: 100%;
     height: fit-content;
     box-sizing: border-box;
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
+    z-index: 800;
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
     padding: 45px;
-    padding-left: 65px;
-    padding-right: 65px;
+    padding-left: 55px;
+    padding-right: 55px;
 }
 
 #navbar-left, #navbar-right {
@@ -66,9 +122,14 @@ html, body {
 .action {
     position: relative;
     font-size: 20px;
-    margin-right: 8px;
-    letter-spacing: 4px;
+    margin-left: 12px;
+    letter-spacing: 8px;
     cursor: pointer;
+    transition: 0.2s ease all;
+}
+
+.action:hover, #signout:hover {
+    font-weight: bold;
 }
 
 #signout-text {
@@ -93,7 +154,8 @@ html, body {
 #row_selected {
     position: relative;
     font-size: 18px;
-    margin-right: 45px;
+    margin-right: 0px;
+    margin-top: 7px;
     text-transform: uppercase;
 }
 
@@ -102,7 +164,7 @@ html, body {
     width: 100%;
     height: fit-content;
     box-sizing: border-box;
-    padding-top: 275px;
+    padding-top: 250px;
 }
 
 #crud-title {
@@ -111,7 +173,7 @@ html, body {
     transform: translateX(-50%);
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 35px;
+    font-size: 40px;
     letter-spacing: 12px;
     text-align: center;
 }
@@ -173,9 +235,10 @@ html, body {
     border-collapse: collapse;
 }
 
-#table tr td {
+#table tr td, .action-fullscreen-table tr td {
     background-color: rgb(29, 13, 87);
-    padding: 10px;
+    padding: 20px;
+    box-sizing: border-box;
     font-family: "Roboto";
 }
 
@@ -187,12 +250,145 @@ html, body {
     letter-spacing: 2px;
 }
 
-#table tr:hover td {
-    background-color: #3d2591;
+#table tr:hover td, .action-fullscreen-table tr:hover td {
+    background-color: #3d2591 !important;
 }
 
 .th-row {
     position: sticky;
+    top: 147px;
 }
 
-.odd { background-color: #1e0185; }
+.odd, .odd td { background-color: #331e7e !important; }
+
+.action-fullscreen {
+    position: fixed;
+    display: none;;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+}
+
+.action-fullscreen-outer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
+
+.action-fullscreen-contents {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.action-fullscreen-title {
+    position: relative;
+    font-size: 40px;
+    letter-spacing: 10px;
+    font-weight: bold;
+    font-family: "Lato";
+    margin-bottom: 20px;
+}
+
+.action-fullscreen-description {
+    position: relative;
+    font-size: 18px;
+    margin-bottom: 5px;
+    font-family: "Roboto";
+}
+
+.action-fullscreen-table {
+    position: relative;
+    height: fit-content;
+    width: 400px;
+    max-width: 420px;
+    border-collapse: collapse;
+    border-radius: 15px;
+    margin-bottom: 7.5px;
+}
+
+.action-fullscreen-table-container  {
+    position: relative;
+    max-height: 600px;
+    overflow-y: scroll;
+    width: fit-content;
+    border-radius: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+
+}
+
+.action-table-th {
+    position: relative;
+    font-size: 14px;
+    text-transform: uppercase;
+    /* background-color: #170f33; */
+    letter-spacing: 2px;
+}
+
+.action-fullscreen-table tr td {
+    position: relative;
+    font-family: "Roboto";
+    text-align: right;
+    font-size: 17px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.action-table-th th {
+    position: sticky;
+    padding: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    top: 0px;
+    z-index: 999;
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);}
+
+.action-table-input {
+    position: relative;
+    background-color: transparent;
+    outline: none;
+    border: 0px;
+    transition: 0.2s ease all;
+    border-bottom: 0.2em solid rgb(67, 50, 134);
+    color: #fff;
+    font-family: "Roboto";
+    font-size: 17px;
+    padding: 7px;
+}
+
+.action-table-input:hover { border-bottom: 0.2em solid rgb(100, 79, 184); }
+.action-table-input:focus { border-bottom: 0.2em solid rgb(126, 103, 218); }
+
+.button {
+    position: relative;
+    padding: 14px;
+    padding-right: 25px;
+    padding-left: 15px;;
+    border-radius: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.button-icon {
+    position: relative;
+    height: 30px;
+    width: 30px;
+    margin-right: 5px;
+}
+
+.button-text {
+    position: relative;
+    font-family: "Roboto";
+    font-size: 18px;
+}
