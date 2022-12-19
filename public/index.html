@@ -47,19 +47,21 @@
         <!-- <div class="popup-icon cover inline-middle"></div> -->
     </div>
 
-    <div class="information inline-middle" id="todo-list">
+    <div class="wallpaper cover">
+        <div class="wallpaper-inner"></div>
+    </div>
+
+    <!-- <div class="information inline-middle" id="todo-list">
         <div class="information-icon cover"></div>
         <div class="information-title">Todo List</div>
         <div class="information-txt">
-            - CREATE Backend functionality [IMPORTANT]<br>
             - Additional protection against incoming data on backend<br>
             - Sort rows<br>
             - Persistent database changes<br>
             - Nice pattern in background (if we got time)<br>
             - Custom scrollbar<br>
-            - Firebase authentication [IMPORTANT]
         </div>
-    </div>
+    </div> -->
 
     <div id="navbar">
  
@@ -97,11 +99,22 @@
 
         <div id="crud-title">STAGING LABS</div>
         <div id="no-records">86 records available</div>
-        <div class="information" id="welcome-tab">
-            <div class="information-icon cover"></div>
-            <div class="information-title">Information</div>
-            <div class="information-txt">Welcome to Staging Labs. Here you can Create, Read, Update, and Delete records from the database.<br>
-               <br>Please note you can only perform an UPDATE operation on record at a time. Though you can delete multiple records at once 
+
+        <div id="filters" class="information">
+            <div id="filters-txt">Filters</div>
+            <div>
+                <div class="filter inline-middle">
+                    <div class="filter-txt">SORT BY</div>
+                    <select class="action-table-input login-input" id="sort_by">
+                    </select>
+                </div>
+                <div class="filter inline-middle">
+                    <div class="filter-txt">ORDER</div>
+                    <select class="action-table-input login-input" id="order">
+                        <option value="descending">Descending</option>
+                        <option value="ascending">Ascending</option>
+                    </select>
+                </div>
             </div>
         </div>
 

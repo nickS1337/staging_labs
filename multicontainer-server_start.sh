@@ -4,6 +4,7 @@ docker run -p 3306:3306 \
     --name mysql-server \
     -e MYSQL_ROOT_PASSWORD=mygene \
     -e MYSQL_DATABASE=dnaiq_dallas \
+    -v mysql-volume:/home/nicholas/Desktop/mygene/intro_final/volume_mysql \
     -v /home/nicholas/Desktop/mygene/intro_final/mysql:/docker-entrypoint-initdb.d \
     -d mysql:8
 
