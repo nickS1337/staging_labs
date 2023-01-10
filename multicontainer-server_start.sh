@@ -12,14 +12,17 @@ docker run -p 3306:3306 \
 echo "PHP server started"
 docker run -p 9000 \
     --name php-server \
-    -d php:8.0-fpm-alpine
+    -d \
+    -e VIRTUAL_ROOT=/var/www/html/ \
+    php:8.0-fpm-alpine
 
 echo "Nginx server started"
 docker run -p 8080:80 \
     -v /home/nicholas/Desktop/mygene/intro_final/public:/var/www/html/ \
     -v /home/nicholas/Desktop/mygene/intro_final/public:/usr/share/nginx/html \
     --name nginx-server \
-    -d nginx:1.22-alpine
+    -d \
+    nginx:1.22-alpine
 
 #sleep 20
 #echo "Starting Node.JS server"

@@ -40,12 +40,23 @@ var line = mysql.createConnection({
     "database": "dnaiq_dallas"
 });
 
+function connectSQL(){
+    line = mysql.createConnection({
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "mygene",
+        "database": "dnaiq_dallas"
+    }); 
+}
+
 //When we connect to the mysql database:
 line.connect((err)=>{
 
     //Print on error
     if (err){
         console.log(err);
+        console.log("Error connecting to MySQL. Retrying in 2 seconds");
+        setTimeout(connectSQL, 2000);
         return;
     }
 
