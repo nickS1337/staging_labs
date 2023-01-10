@@ -13,6 +13,26 @@ html, body {
     background-color: rgb(100, 79, 184) !important;
 } */
 
+.wallpaper {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-image: url("pics/20220328_212931000_iOS.jpg");
+    -webkit-backdrop-filter: blur(7px);
+    backdrop-filter: blur(7px);
+}
+
+.wallpaper-inner {
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: #201547;
+    opacity: 0.8;
+}
+
 #login {
     position: fixed;
     display: table;
@@ -245,9 +265,7 @@ html, body {
 
 #welcome-tab {
     position: relative;
-    left: 50%;
-    margin-top: 45px;
-    transform: translateX(-50%);
+    margin-bottom: 10px;
 }
 
 .information {
@@ -257,8 +275,8 @@ html, body {
     width: fit-content;
     max-width: 425px;
     padding: 20px;
-    background-color: #551183;
-    border: 0.2em solid #4a0a75;
+    background-color: #740eb8;
+    border: 0.2em solid #520386;
     border-style: dashed;
     border-radius: 10px;
 }
@@ -496,4 +514,46 @@ html, body {
     margin-top: 25px;
     color: #ccc;
     cursor: pointer;
+}
+
+#filters {
+    position: relative;
+    width: fit-content;
+    max-width: 280px;
+    left: 50%;
+    box-sizing: content-box;
+    background-color: #2e0788;
+    border: 0.2em solid #4108c4;
+    border-style: dashed;
+    margin-top: 25px;
+    padding-top: 25px;
+    transform: translateX(-50%);
+}
+
+#filters-txt {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    font-size: 25px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.filter, #filter-inputs-container {
+    position: relative;
+    width: fit-content;
+}
+
+.filter-txt {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.filter select {
+    min-width: 250px;
+    max-width: 275px;
+    letter-spacing: 1.5px;
+    font-family: "Roboto";
 }

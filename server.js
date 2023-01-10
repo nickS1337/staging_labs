@@ -40,12 +40,23 @@ var line = mysql.createConnection({
     "database": "dnaiq_dallas"
 });
 
+function connectSQL(){
+    line = mysql.createConnection({
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "mygene",
+        "database": "dnaiq_dallas"
+    }); 
+}
+
 //When we connect to the mysql database:
 line.connect((err)=>{
 
     //Print on error
     if (err){
         console.log(err);
+        console.log("Error connecting to MySQL. Retrying in 2 seconds");
+        setTimeout(connectSQL, 2000);
         return;
     }
 
@@ -198,7 +209,7 @@ io.on("connection", (socket)=>{
 
         for (var i = 0; i < keys.length; i++){
         
-            comma = (i !== keys.length-1) ? ", " : "";
+            var comma = (i !== keys.length-1) ? ", " : "";
 
             var value = new_row[keys[i]];
                 value = (typeof value == "string") ? "'" + value + "'" : value;
@@ -214,14 +225,13 @@ io.on("connection", (socket)=>{
         line.query(mysql_string, (err, results, fields)=>{
 
             if (err){
-                errString = "Error performing CREATE operation: " + err;
+                var errString = "Error performing CREATE operation: " + err;
                 socket.emit("message", errString, "red");
                 console.log(errString);
                 return;
             }
 
             socket.emit("message", "CREATE Operation successfully performed. Successfully created 1 new record. MYSQL: " + results.info);
-            socket.emit("reload");
 
         });
         
@@ -236,7 +246,7 @@ io.on("connection", (socket)=>{
 
         createUserWithEmailAndPassword(auth, email, password).then((userCredentials)=>{
             socket.emit("logged-in");
-        }).catch((e)=>{
+        }).catch((err)=>{
             socket.emit("login-error", "Failed to create new account: " + err.message);
             console.log("Failed to create new account: " + err.message);
         });
@@ -249,7 +259,7 @@ io.on("connection", (socket)=>{
 
         signInWithEmailAndPassword(auth, email, password).then(()=>{
             socket.emit("logged-in");
-        }).catch((e)=>{
+        }).catch((err)=>{
             socket.emit("login-error", "Login failed: " + err.message);
             console.log("Login failed: " + err.message);
         });
